@@ -31,7 +31,7 @@ public class WVIServiceImpl implements WVIService {
     }
 
     public void deleteAll(){
-        log.info("deleting all indicators for updatec");
+        log.info("deleting all indicators for update");
         wviRepository.deleteAll();
     }
 }

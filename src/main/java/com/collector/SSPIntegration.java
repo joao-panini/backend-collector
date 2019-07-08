@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.processor.DataProcessor;
 
 
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -27,15 +26,19 @@ public class SSPIntegration {
     private static final String CRON = "1 * * * * ?";
     private static final long DEFAULT_RETRY_WAIT = 30000L;
 
+
     @Scheduled(cron = CRON)
     public void startDataCollection() throws InterruptedException {
-        //log.info("The time now is {}", dateFormat.format(new Date()));
 
-        List<String> filesDownloadLinks = new SeleniumCrawlingServiceImpl().getFileLinks(SSP_VIOLENCE_AGAINST_WOMAN_LINK);
+        CrawlerHandler crawlers = new SeleniumHandler();
+        crawlers.setNext(new JsoupHandler());
+
+        List<String> filesDownloadLinks = crawlers.getFileLinks(SSP_VIOLENCE_AGAINST_WOMAN_LINK);
+
         if (filesDownloadLinks.size() == 0) {
             log.warn("No links found, waiting for 30 seconds and trying one more time...");
             Thread.sleep(DEFAULT_RETRY_WAIT);
-            filesDownloadLinks = new SeleniumCrawlingServiceImpl().getFileLinks(SSP_VIOLENCE_AGAINST_WOMAN_LINK);
+            filesDownloadLinks = crawlers.getFileLinks(SSP_VIOLENCE_AGAINST_WOMAN_LINK);
         }
 
         List<String> fileNames = collectionService.getFilesFromLinks(filesDownloadLinks);

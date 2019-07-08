@@ -12,11 +12,16 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SeleniumCrawlingServiceImpl implements CrawlingService{
+public class SeleniumHandler extends CrawlerHandler{
 
-    private static final Logger log = LoggerFactory.getLogger(SeleniumCrawlingServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SeleniumHandler.class);
     private static final String DOWNLOAD_LINK_XPATH = "//p//a[contains(@href, '/upload/')][1]";
     private ChromeDriverService chromeDriverService;
+
+
+    public SeleniumHandler() {
+        super(EnumCrawlers.SELENIUM);
+    }
 
     private void startChromeService() {
         try {
@@ -43,15 +48,24 @@ public class SeleniumCrawlingServiceImpl implements CrawlingService{
 
     @Override
     public List<String> getFileLinks(String urlToCrawl) {
-        WebDriver webDriver = getHeadlessChrome();
-        webDriver.get(urlToCrawl);
-        List<String> links = webDriver.findElements(By.xpath(DOWNLOAD_LINK_XPATH))
-                .stream()
-                .map(x -> x.getAttribute("href"))
-                .collect(Collectors.toList());
-        webDriver.quit();
-        stopChromeService();
-        log.info("Total of links found : {}", links.size());
-        return links;
+        try {
+            WebDriver webDriver = getHeadlessChrome();
+            webDriver.get(urlToCrawl);
+            List<String> links = webDriver.findElements(By.xpath(DOWNLOAD_LINK_XPATH))
+                    .stream()
+                    .map(x -> x.getAttribute("href"))
+                    .collect(Collectors.toList());
+            webDriver.quit();
+            stopChromeService();
+            log.info("Total of links found : {}", links.size());
+
+
+            return links;
+
+        } catch (Exception e) {
+           return next.getFileLinks(urlToCrawl);
+        }
     }
+
+
 }
