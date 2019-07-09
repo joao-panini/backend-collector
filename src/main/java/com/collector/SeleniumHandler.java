@@ -63,6 +63,7 @@ public class SeleniumHandler extends CrawlerHandler{
             return links;
 
         } catch (Exception e) {
+            log.error(e.toString());
            return next.getFileLinks(urlToCrawl);
         }
     }

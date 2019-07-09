@@ -1,8 +1,8 @@
 package com.services;
 
-import com.collector.SSPIntegration;
+import com.entity.GCIEntity;
 import com.entity.WVIEntity;
-import com.repository.WVIRepository;
+import com.repository.GCIRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,27 +11,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class WVIServiceImpl implements WVIService {
+public class GCIServiceImpl implements WVIService {
 
     private static final Logger log = LoggerFactory.getLogger(WVIServiceImpl.class);
 
     @Autowired
-    private WVIRepository wviRepository;
+    private GCIRepository gciRepository;
 
-    public WVIServiceImpl(WVIRepository repo) {
-        wviRepository = repo;
+    public GCIServiceImpl(GCIRepository repo) {
+        gciRepository = repo;
     }
 
-    public WVIEntity saveIndicator(WVIEntity WVIEntity) {
-        return wviRepository.save(WVIEntity);
+    public GCIEntity saveIndicator(GCIEntity gciEntity) {
+        return gciRepository.save(gciEntity);
     }
 
-    public List<WVIEntity> listAll() {
-        return wviRepository.findAll();
+
+    public List<GCIEntity> listAll() {
+        return gciRepository.findAll();
     }
 
     public void deleteAll() {
         log.info("deleting all indicators for update");
-        wviRepository.deleteAll();
+        gciRepository.deleteAll();
     }
 }
